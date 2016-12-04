@@ -1,0 +1,31 @@
+.panel-title {
+    background-color: #252321;
+}
+.panel-title h1 {
+    color: #ffffff;
+}
+.logo {
+    margin-top: 10px;
+    width: 150px;
+}
+.page-header {
+    margin-top: 0;
+}
+.playlist-item:hover {
+    cursor: pointer
+}    
+.add-btn {
+    float: right;
+}
+.track-list {
+    margin-top: 20px;
+}
+.track-info {
+    display: inline;
+    max-width: 80%;
+}
+
+.glyphicon {
+    margin: 0 10px;
+    float: right
+}

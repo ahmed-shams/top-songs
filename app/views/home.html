@@ -1,0 +1,156 @@
+<div class="container">
+    <div class="row main header-row">
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <img src="app/img/logo2.png" class="logo">
+                <h1 class="title">Angular Top 10 Songs</h1>                                
+                <hr />
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="row">        
+        <div class="col-sm-5 col-md-4 sidebar">
+            
+            <div class="input-group">
+              <input type="text" class="form-control" name="plName" placeholder="Add new playlist" ng-model="plName">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="addPlaylist();">Add</button>
+              </span>
+            </div>
+            <br/>
+            <ul class="list-group" ng-show="playlists.length">
+                <li class="list-group-item active">
+                    <b>My Playlists</b>
+                </li>
+                <li class="list-group-item playlist-item" ng-repeat="playlist in playlists | orderBy: 'title' track by playlist.id" ng-class="{'list-group-item-info': activeList.id == playlist.id}" ng-click="setActiveList(playlist.id)">
+                    <span class="badge">{{ playlist.songs.length}}</span>
+                    {{ playlist.title }}
+                </li>                
+            </ul>
+                        
+        </div>
+        <div class="col-sm-7" ng-show="activeList.hasOwnProperty('id')">
+            <h1 class="page-header">{{ activeList.title}} Tracks</h1>
+            
+            <button data-toggle="modal" data-target="#addTracksModal" type="button" class="btn btn-primary playlist_btn" >
+                <i class="icon-user icon-white"></i> Add Track
+            </button>
+            <button ng-click="export()" class="btn btn-primary" data-toggle="modal" data-target="#exportModal">
+                Export to JSON
+            </button>
+            <br/>            
+            <div class="row track-list">
+                <ul class="list-group" ng-show="activeList.tracks.length">
+                    <li class="list-group-item" ng-repeat="(index, song) in activeList.tracks track by song.id">
+                        <a href="" class="glyphicon glyphicon-pencil" ng-click="setActiveTrack(index)"></a>
+                        <a href="" class="glyphicon glyphicon-trash" ng-click="deleteTrack(index)"></a>
+                        
+                        <div class="track-info">
+                            <img src="{{song.customImage}}" width="50">
+                            <b>Title :</b> {{ song.title}}, <b>Artist: </b> {{ song.artist}} <br/>
+                            <b>Notes:</b> {{ song.note}}
+                        </div>
+                        <br/>
+                        <div class="panel panel-info" ng-show="song.active">
+                             <div class="panel-heading"><b>Update Track Image & Note</b></div>
+                                <div class="panel-body">
+                            
+                            <form>
+                              <div class="form-group">
+                                <label for="custImg">Image URL</label>
+                                <input type="text" class="form-control" name="custImg" placeholder="{{song.customImage}}" ng-model="activeTrack.customImage">
+                                <small id="emailHelp" class="form-text text-muted">Enter a valid URL.</small>
+                              </div>
+                              <div class="form-group">
+                                <label for="note">Note</label>
+                                <input type="text" class="form-control" name="note" placeholder="{{song.note}}" ng-model="activeTrack.note">
+                              </div>
+                                <button class="btn btn-default" type="button" ng-click="editTrack();">Save</button>
+                            </form>
+                            </div>
+                                                  
+                        </div>
+                    </li>
+                </ul>
+            </div>                        
+
+                          
+            <!-- Search Modal -->
+            <div class="modal fade" id="addTracksModal" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content" >
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" ng-click="clearResults()">&times;</button>
+                  <h4 class="modal-title">Track Search</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                        <div class="input-group">
+                          <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ searchBy || 'Search By' }}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a href="" ng-repeat="type in searchTypes" ng-click="setSearchBy(type)">{{ type }}</a></li>
+                              
+                            </ul>
+                          </div><!-- /btn-group -->
+                          <input type="text" class="form-control" ng-model="searchQuery">       <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="doSearch()">Go!</button>
+                          </span>                   
+                          
+                        </div><!-- /input-group -->
+                      </div><!-- /.col-lg-6 -->                      
+                  </div><!-- /.row -->
+                  <div class="row">
+                      <br/>
+                      <ul class="list-group" ng-show="searchResults.length">
+                        <li class="list-group-item" ng-repeat="item in searchResults track by item.id">
+                            
+                            {{ item.title + ' --- By: ' + item.artist }}
+                            {{searchBy}}
+                            <button ng-show="searchBy == 'track'" class="btn btn-primary btn-xs add-btn" type="button" ng-click="addTrack(item)">Add to list</button>
+                            
+                            <button ng-show="searchBy == 'album'" class="btn btn-primary btn-xs add-btn" type="button" ng-click="getTracksByAlbumId(item.id)">Get Album Tracks</button>
+                            
+                            <button ng-show="searchBy == 'artist'" class="btn btn-primary btn-xs add-btn" type="button" ng-click="getTracksByArtistId(item.id)">Get Top Tracks</button>
+                          </li>
+                      </ul>
+                      
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearResults()">Close</button>
+                </div>
+              </div>
+
+            </div>
+            </div>
+
+            <!-- JSON Modal -->
+            <div class="modal fade" id="exportModal" role="dialog">
+                <div class="modal-dialog">
+                      <!--Modal content-->
+                      <div class="modal-content" >
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" >&times;</button>
+                          <h4 class="modal-title">JSON Data</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">                                
+                                <pre ng-show="savedJSON">{{savedJSON}}</pre>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                  
+        </div>
+    </div>
+</div>
