@@ -22,9 +22,9 @@ module.exports = function(config) {
       'bower_components/ngModal/dist/ng-modal.js',
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/angular-spotify/dist/angular-spotify.min.js',
       // endbower
       'app/**/*.js',
-      'test/mock/**/*.js',
       'test/spec/**/*.js'
     ],
 

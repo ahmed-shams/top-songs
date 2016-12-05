@@ -93,7 +93,6 @@ angular.module('AngularTop10SongsApp')
     }
     
     $scope.editTrack = function() {
-        console.log($scope.activeTrack);
         $scope.activeTrack.active = false;
         $scope.activeList.tracks[$scope.activeTrack.index] = $scope.activeTrack;
         delete $scope.activeList.tracks[$scope.activeTrack.index].index;
